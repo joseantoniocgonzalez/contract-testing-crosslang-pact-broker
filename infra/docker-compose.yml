@@ -1,0 +1,34 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - pact_broker_pgdata:/var/lib/postgresql/data
+
+  broker:
+    image: pactfoundation/pact-broker:latest
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "9292:9292"
+    environment:
+      PACT_BROKER_DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      PACT_BROKER_LOG_LEVEL: INFO
+
+      # Basic Auth (duro y realista)
+      PACT_BROKER_BASIC_AUTH_USERNAME: ${PACT_BROKER_USERNAME}
+      PACT_BROKER_BASIC_AUTH_PASSWORD: ${PACT_BROKER_PASSWORD}
+      PACT_BROKER_BASIC_AUTH_READ_ONLY_USERNAME: ${PACT_BROKER_READONLY_USERNAME}
+      PACT_BROKER_BASIC_AUTH_READ_ONLY_PASSWORD: ${PACT_BROKER_READONLY_PASSWORD}
+
+volumes:
+  pact_broker_pgdata:
