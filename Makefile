@@ -1,22 +1,22 @@
 DC ?= docker-compose
 COMPOSE_FILE := infra/docker-compose.yml
 ENV_FILE ?= .env
+ENV_USED := $(if $(wildcard $(ENV_FILE)),$(ENV_FILE),.env.example)
+DC_CMD := $(DC) --env-file $(ENV_USED) -f $(COMPOSE_FILE)
 
-.PHONY: up down logs ps
+.PHONY: up down logs ps config
 
 up:
-	@# Usa .env si existe; si no, tira de .env.example
-	@if [ -f "$(ENV_FILE)" ]; then \
-	  $(DC) --env-file $(ENV_FILE) -f $(COMPOSE_FILE) up -d; \
-	else \
-	  $(DC) --env-file .env.example -f $(COMPOSE_FILE) up -d; \
-	fi
+	@$(DC_CMD) up -d
 
 down:
-	@$(DC) -f $(COMPOSE_FILE) down -v
+	@$(DC_CMD) down -v
 
 logs:
-	@$(DC) -f $(COMPOSE_FILE) logs -f --tail=100
+	@$(DC_CMD) logs -f --tail=100
 
 ps:
-	@$(DC) -f $(COMPOSE_FILE) ps
+	@$(DC_CMD) ps
+
+config:
+	@$(DC_CMD) config >/dev/null && echo "compose config OK (env: $(ENV_USED))"
