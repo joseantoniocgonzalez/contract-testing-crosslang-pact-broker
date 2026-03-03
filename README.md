@@ -104,3 +104,14 @@ pact-broker publish pacts \
 Docs:
 - Pact Python (consumer): https://docs.pact.io/implementation_guides/python/docs/consumer
 - Pact Broker CLI: https://docs.pact.io/pact_broker/client_cli
+
+## CI (GitHub Actions)
+
+Workflows:
+
+- **publish-pacts** (`.github/workflows/publish-pacts.yml`): levanta el broker y publica pacts con `make consumer-test`.
+- **verify-and-gate** (`.github/workflows/verify-and-gate.yml`): publica pacts → verifica provider (`make provider-verify`) → gating (`make can-i-deploy`). Si hay breaking change, falla.
+
+Artifacts:
+- `pacts` (JSON generado)
+- `provider-surefire-reports` (logs/reportes de verificación)
