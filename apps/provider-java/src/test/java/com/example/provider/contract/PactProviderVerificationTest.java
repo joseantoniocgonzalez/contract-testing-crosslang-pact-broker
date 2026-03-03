@@ -41,8 +41,12 @@ public class PactProviderVerificationTest {
     context.verifyInteraction();
   }
 
-  @State("user exists")
-  void userExists() {
-    // No-op por ahora: solo necesitamos que exista el handler del state
-  }
+    @State("user exists")
+  void userExists() {}
+
+  @State("product exists")
+  void productExists() {}
+
+  @State("product 123 exists")
+  void product123Exists() {}
 }
