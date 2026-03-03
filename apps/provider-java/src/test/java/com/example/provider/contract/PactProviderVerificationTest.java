@@ -44,6 +44,9 @@ public class PactProviderVerificationTest {
     @State("user exists")
   void userExists() {}
 
+  @State("user is authenticated")
+  void userIsAuthenticated() {}
+
   @State("product exists")
   void productExists() {}
 
