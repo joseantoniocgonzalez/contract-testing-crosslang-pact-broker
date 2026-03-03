@@ -1,0 +1,58 @@
+name: verify-and-gate
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    env:
+      PACT_BROKER_BASE_URL: http://localhost:9292
+      PACT_BROKER_USERNAME: ci
+      PACT_BROKER_PASSWORD: ci
+      PACT_TAG: ${{ github.ref_name }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: |
+            apps/consumer-python/requirements.txt
+            apps/consumer-python/requirements-dev.txt
+
+      - name: Start Pact Broker (docker compose)
+        run: |
+          make up
+          make ps
+
+      - name: Publish pacts (consumer-test)
+        run: |
+          make consumer-test
+
+      - name: Provider verification (publish results)
+        run: |
+          make provider-verify
+
+      - name: can-i-deploy (gating)
+        run: |
+          make can-i-deploy
+
+      - name: Upload artifacts (provider test reports)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: provider-surefire-reports
+          path: apps/provider-java/target/surefire-reports
