@@ -24,7 +24,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
   host = "localhost",
   port = "9292",
   scheme = "http",
-  tags = {"local"},
+  tags = {"${PACT_TAG}"},
   authentication = @PactBrokerAuth(
     username = "${PACT_BROKER_USERNAME}",
     password = "${PACT_BROKER_PASSWORD}"
