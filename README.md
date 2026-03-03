@@ -9,7 +9,7 @@ Monorepo tipo empresa para *Contract Testing cross-language* con *Pact + Pact Br
 
 ---
 
-## Portfolio highlights 
+## Portfolio highlights (por qué este repo es fuerte)
 
 - *Cross-language real: Consumer en **Python* y Provider en *Java/Spring Boot*.
 - *3 contratos completos* (Auth, Catalog, Checkout) con request/response JSON reales.
