@@ -25,7 +25,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
   )
 )
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-.com.dius.pact.provider.junitsupport.loader.PactVerificationSpringProvider
 public class PactProviderVerificationTest {
 
   @LocalServerPort
