@@ -1,0 +1,39 @@
+name: publish-pacts
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      PACT_BROKER_BASE_URL: http://localhost:9292
+      PACT_BROKER_USERNAME: ci
+      PACT_BROKER_PASSWORD: ci
+      PACT_TAG: ${{ github.ref_name }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Start Pact Broker (docker compose)
+        run: |
+          make up
+          make ps
+
+      - name: Publish pacts (consumer-test)
+        run: |
+          make consumer-test
+
+      - name: Upload artifacts (pacts)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pacts
+          path: apps/consumer-python/pacts
