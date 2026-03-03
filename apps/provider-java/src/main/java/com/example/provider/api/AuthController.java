@@ -19,5 +19,5 @@ public class AuthController {
   }
 
   public record LoginRequest(@NotBlank String username, @NotBlank String password) {}
-  public record LoginResponse(String token) {}
+  public record LoginResponse(String accessToken) {}
 }
