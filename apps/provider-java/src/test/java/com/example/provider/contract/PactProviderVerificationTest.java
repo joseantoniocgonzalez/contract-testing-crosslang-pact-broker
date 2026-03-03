@@ -10,9 +10,15 @@ import au.com.dius.pact.provider.junit5.HttpTestTarget;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariables;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
+@EnabledIfEnvironmentVariables({
+  @EnabledIfEnvironmentVariable(named="PACT_BROKER_USERNAME", matches=".+"),
+  @EnabledIfEnvironmentVariable(named="PACT_BROKER_PASSWORD", matches=".+")
+})
 @Provider("provider-java")
 @PactBroker(
   host = "localhost",
