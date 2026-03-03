@@ -48,8 +48,13 @@ consumer-test:
 	    --consumer-app-version "$$SHA" \
 	    --tag "$$TAG"
 
+
 can-i-deploy:
-	@SHA=$$(git rev-parse HEAD) && \
+	@cd apps/consumer-python && \
+	  if [ ! -d .venv ]; then python3.13 -m venv .venv; fi && \
+	  . .venv/bin/activate && \
+	  python -m pip install -q -r requirements-dev.txt && \
+	  SHA=$$(git -C ../.. rev-parse HEAD) && \
 	  BROKER_URL=$${PACT_BROKER_BASE_URL:-http://localhost:9292} && \
 	  USER=$${PACT_BROKER_USERNAME:-ci} && \
 	  PASS=$${PACT_BROKER_PASSWORD:-ci} && \
@@ -58,4 +63,3 @@ can-i-deploy:
 	    --broker-username "$$USER" \
 	    --broker-password "$$PASS" \
 	    --pacticipant consumer-python --version "$$SHA" \
-	    --pacticipant provider-java --version "$$SHA"
