@@ -1,4 +1,4 @@
-DC ?= 1000 24 25 27 29 30 44 46 100 106 112 114 117 126 128 1000shell if command -v docker-compose >/dev/null 2>&1; then echo docker-compose; else echo docker compose; fi)
+DC ?= $(if $(shell command -v docker-compose 2>/dev/null),docker-compose,docker compose)
 COMPOSE_FILE := infra/docker-compose.yml
 ENV_FILE ?= .env
 ENV_USED := $(if $(wildcard $(ENV_FILE)),$(ENV_FILE),.env.example)
