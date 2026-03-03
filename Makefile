@@ -27,6 +27,7 @@ provider-verify:
 	  PACT_BROKER_USERNAME=$${PACT_BROKER_USERNAME:-ci} \
 	  PACT_BROKER_PASSWORD=$${PACT_BROKER_PASSWORD:-ci} \
 	  ./mvnw -q test -Dtest=PactProviderVerificationTest \
+	    -Dpactbroker.tags="$$TAG" \
 	    -Dpact.verifier.publishResults=true \
 	    -Dpact.provider.version="$$PROVIDER_SHA"
 
